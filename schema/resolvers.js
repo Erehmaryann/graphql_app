@@ -4,7 +4,7 @@ const { UserList } = require("../FakeData");
 const resolvers = {
     // the highest level field 
     Query: {
-        // resolver func for the users field
+        // resolver func for all fields inside the Query
         users() {
             // return your data
             return UserList;
