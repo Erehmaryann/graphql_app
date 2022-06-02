@@ -1,4 +1,5 @@
 const { ApolloServer } = require("apollo-server");
+const { typeDefs } = require("./schema/type-defs");
 
 // Define an instance of ApolloServer
 // Apolloserver takes in two pieces of information
