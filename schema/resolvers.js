@@ -1,4 +1,5 @@
 const { UserList, MovieList } = require("../FakeData");
+const _ = require("lodash");
 
 // All the fuctions that are going to return data in the frontend
 const resolvers = {
@@ -12,7 +13,7 @@ const resolvers = {
         },
         // resolver func accepts two arguments: the parent and the args
         // If you don't want to use the parent, you can replace it with an underscore
-        user: (_, args) => {
+        user: (parent, args) => {
             // return the user that matches the number value of the id
             return UserList.find(user => user.id === Number(args.id));
         },
@@ -21,7 +22,7 @@ const resolvers = {
         movies: () => {
             return MovieList;
         },
-        movie: (_, args) => {
+        movie: (parent, args) => {
             return MovieList.find(movie => movie.name === args.name);
         },
     },
@@ -36,7 +37,7 @@ const resolvers = {
     // the root Mutation
     Mutation: {
         // resolver func for the createUser field
-        createUser: (_, args) => {
+        createUser: (parent, args) => {
             // create a new user
             const user = args.input;
             // the id of the last user in the list
@@ -49,7 +50,7 @@ const resolvers = {
             return user;
         },
         // resolver func for the updateUsername field
-        updateUsername: (_, args) => {
+        updateUsername: (parent, args) => {
             // destructure the input and get the id and newUsername
             const { id, newUsername } = args.input;
             // initialize the userUpdated variable
@@ -67,6 +68,15 @@ const resolvers = {
             );
             // return the updated user
             return userUpdated;
+        },
+        // resolver func for the deleteUser field
+        deleteUser: (parent, args) => {
+            // destructure the input and get the id
+            const { id } = args;
+            // use the lodash remove function to remove the user from the list
+            _.remove(UserList, (user) => user.id === Number(id));
+            // return null to indicate that the user was deleted
+            return null;
         }
     }
 };
