@@ -7,13 +7,15 @@ const resolvers = {
     Query: {
         // USER RESOLVER
         // resolver func for all fields inside the Query
-        users: () => {
-            // return your data
-            return UserList;
+        users: (parent, args, context, info) => {
+            // return your data 
+            if (UserList) return { users: UserList };
+
+            return { message: "Yo, there was an error" };
         },
-        // resolver func accepts two arguments: the parent and the args
+        // resolver func accepts four arguments: the parent, the args, context, and info
         // If you don't want to use the parent, you can replace it with an underscore
-        user: (parent, args) => {
+        user: (parent, args, context, info) => {
             // return the user that matches the number value of the id
             return UserList.find(user => user.id === Number(args.id));
         },
@@ -76,6 +78,15 @@ const resolvers = {
             // use the lodash remove function to remove the user from the list
             _.remove(UserList, (user) => user.id === Number(id));
             // return null to indicate that the user was deleted
+            return null;
+        }
+    },
+
+    // Resolver for UsersResult type
+    UserResult: {
+        __resolveType(obj) {
+            if (obj.users) return "UsersSuccessfulResult";
+            if (obj.message) return "UsersErrorResult";
             return null;
         }
     }
